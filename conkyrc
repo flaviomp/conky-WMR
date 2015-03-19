@@ -1,0 +1,120 @@
+##################################################
+##################################################
+##												##
+##					Settings					##
+##												##
+##################################################
+##################################################
+background no
+update_interval 1.0
+double_buffer yes
+no_buffers yes
+cpu_avg_samples 2
+net_avg_samples 2
+text_buffer_size 2048
+imlib_cache_size 0
+override_utf8_locale yes
+
+
+# +++++ Window +++++
+own_window yes
+own_window_type desktop
+own_window_transparent yes
+own_window_hints undecorate,sticky,skip_taskbar,skip_pager,below
+
+border_inner_margin 0
+border_outer_margin 0
+
+minimum_size 1060 105
+maximum_width 1060
+
+alignment bottom_middle
+gap_x 0
+gap_y 51
+
+
+# +++++ Styles +++++
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders yes
+
+
+# +++++ Colors +++++
+default_shade_color 101010
+default_color 8F8F8F
+
+# Williams rings
+color1 71A1DF
+color2 2C3949
+color3 6F99B4
+color4 FFFFFF
+lua_load williams_rings.lua
+lua_draw_hook_pre ring_stats
+
+
+# +++++ Font +++++
+use_xft yes
+xftfont Ubuntu:bold:size=6.5
+xftalpha 1
+uppercase no
+
+TEXT
+#Background Image
+${image images/bg2.png -s 1060x105 -f 86400}
+\
+#Clock
+${goto 28}${voffset 25}${color3}${font Digital Readout Thick Upright:size=40}00${voffset -9}:${voffset 9}00${goto 28}${color2}${time %k}${voffset -9}:${voffset 9}${time %M}${goto 130}${voffset -20}${color3}${font Digital Readout Thick Upright:size=18}00${goto 130}${color2}${time %d}${font Digital Readout Thick Upright:size=12}${goto 130}${voffset 20}${color3}00${goto 130}${color2}${time %m}${goto 146}${color3}00${goto 146}${color2}${time %y}${font}
+\
+# --- Weather --- #
+###################
+\
+# --- WOEID (Location id) --- #
+${execi 300 curl -s "http://weather.yahooapis.com/forecastrss?w=466861&u=c" -o ~/.cache/weather.xml}\
+\
+# --- Temperature --- #
+#######################
+\
+${color2}${alignc 330}${voffset -13}${font Ubuntu:size=12}${execi 300 grep "yweather:condition" ~/.cache/weather.xml | grep -o "temp=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}°${font Ubuntu:size=12}C${font Ubuntu:size=12}
+# --- Weather icon --- #
+########################
+\
+${alignc 330}${voffset -13}${execi 300 cp -f outlineW/$(grep "yweather:condition" ~/.cache/weather.xml | grep -o "code=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*").png ~/.cache/weather-1.png}${image ~/.cache/weather-1.png -p 190,30 -s 36x36}
+
+#CPU Usage and Temperature
+${image images/icons/cpu.png -p 278,47 -s 24x24 -f 86400}${voffset -90}${alignc 230}${font}${color4}${cpu}%
+${voffset 40}${alignc 240}${font}${exec sensors | grep 'Core 0' | cut -c15-22}
+\
+#RAM and Swap usage
+${image images/icons/mem.png -p 358,48 -s 24x24 -f 86400}${voffset -62}${alignc 160}${mem}
+${voffset 40}${alignc 160}${swap}
+\
+#Network download and upload speed
+${image images/icons/net.png -p 438,48 -s 24x24 -f 86400}${voffset -62}${alignc 80}${downspeedf wlan0}
+${voffset 40}${alignc 80}${upspeedf wlan0}
+\
+#Root and Home partitions used space
+${image images/icons/hdd.png -p 598,48 -s 24x24 -f 86400}${voffset -62}${alignc -80}${fs_free /}
+${voffset 40}${alignc -80}${fs_free /home}
+\
+#Battery charge
+${image images/icons/battery.png -p 678,48 -s 24x24 -f 86400}${voffset -62}${alignc -160}${battery_percent BAT1}%
+\
+###6th monitor
+#${image images/icons/hdd.png -p 758,48 -s 24x24 -f 86400}${voffset -60}${alignc -240}${fs_free /media/Dati_3}
+#${voffset 40}${alignc -240}${fs_free /media/3B69-1AFD}
+\
+${image images/icons/williams.png -p 509,32 -s 40x32 -f 86400}
+${voffset 20}${alignc}${color2}${execi 60 uname -r}
+\
+#Processes info
+${color2}${font Ubuntu:size=8}${voffset -45}${offset 815}Host: ${nodename}
+${color2}${voffset 0}${offset 815}Processes: ${processes}
+${color2}${voffset 0}${offset 815}Run: ${running_processes}
+${color2}${voffset 0}${offset 815}Uptime: ${uptime_short}
+#${color3}${voffset -45}${offset 905}${if_running audacious}${exec audtool --playback-status | cut -b-99}$endif
+#${color3}${voffset 0}${offset 905}${if_running audacious}${exec audtool --current-song | cut -b-99}$endif
+#${color3}${voffset 0}${offset 905}${if_running audacious}${exec audtool --current-song-tuple-data artist | cut -b-99}$endif
+#${color3}${voffset 0}${offset 905}${if_running audacious}${exec audtool --current-song-tuple-data album | cut -b-99}$endif
+#${color3}${voffset 0}${offset 905}${if_running audacious}${exec audtool --current-song-output-length}$endif
+
