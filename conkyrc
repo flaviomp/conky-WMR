@@ -106,7 +106,7 @@ ${voffset 40}${alignc -160}
 ###Countdown to next F1 race
 ${execi 300 curl -s "http://ergast.com/api/f1/current/next.json" -o ~/.cache/f1_next_race.json}\
 ${image images/icons/f1.png -p 758,48 -s 24x24 -f 86400}${voffset -62}${alignc -240}${execi 300 grep -o "\"country\":\"[^\"]*\"" ~/.cache/f1_next_race.json | awk -F: '{print $2}' | grep -o "[^\"]*"}
-${voffset 39}${alignc -240}${lua remainD}d ${lua remainH}h ${lua remainM}m#${execi 300 date --date='TZ="UTC" '`grep -o "\"time\":\"[^\"]*\"" ~/.cache/f1_next_race.json | cut -d':' -f2-3 | grep -o "[^\"]*"`'' +%R}
+${voffset 39}${alignc -240}${lua remainD1}d ${lua remainH}h ${lua remainM}m#${execi 300 date --date='TZ="UTC" '`grep -o "\"time\":\"[^\"]*\"" ~/.cache/f1_next_race.json | cut -d':' -f2-3 | grep -o "[^\"]*"`'' +%R}
 \
 ${image images/icons/williams.png -p 509,32 -s 40x32 -f 86400}
 ${voffset -25}${alignc}${color2}${execi 3600 lsb_release -ds}

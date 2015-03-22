@@ -174,7 +174,7 @@ settings_table = {
     },
     {
 	name='lua',
-	arg='remainD',
+	arg='remainD1',
 	max=30,
 	x=770.5,
 	y=60.5,
